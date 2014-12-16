@@ -8,6 +8,7 @@ function badRequest(message) {
     message = message || "bad request";
     res.send(400, { message: message });
 }
+
 function getUser(id) {
     var query = 'SELECT * FROM users WHERE id=' + sql.quote(id);
     var user = sql.getDataRow(query);
@@ -99,15 +100,20 @@ switch (req.method.toUpperCase()) {
         break;
     case 'PUT':
         // PUT /user/:id
+        if (req.args.length !== 1) {
+            badRequest();
+        }
         updateUser(req.args[0], req.post);
         break;
     case 'POST':
         // POST /user
-        console.dir(req.post);
         createUser(req.post);
         break;
     case 'DELETE':
         // DELETE /user/:id
+        if (req.args.length !== 1) {
+            badRequest();
+        }
         deleteUser(req.args[0]);
         break;
     default:
