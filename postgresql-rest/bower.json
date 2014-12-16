@@ -1,0 +1,29 @@
+{
+  "name": "postgresql-rest-example",
+  "version": "0.0.1",
+  "authors": [
+    "Mike Schwartz <mike@moduscreate.com>"
+  ],
+  "description": "Tutorial: Example WWW App using DecafJS with REST API",
+  "main": "app.js",
+  "keywords": [
+    "tutorial",
+    "rhino",
+    "JavaScript",
+    "Sync",
+    "REST",
+    "PostgreSQL"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/decafjs/decaf-tutorial",
+  "private": "false",
+  "dependencies": {
+    "decaf": "decafjs/decaf#master",
+    "decaf-jolt": "decafjs/decaf-jolt#master",
+    "decaf-jolt-static": "decafjs/decaf-jolt-static#master",
+    "decaf-jolt-sjs": "decafjs/decaf-jolt-sjs#master",
+    "decaf-postgresql": "decafjs/decaf-postgresql#master",
+    "jquery": "2.x",
+    "bootstrap": "3.x"
+  }
+}
