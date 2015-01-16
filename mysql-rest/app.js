@@ -2,8 +2,9 @@
  * Created by mschwartz on 12/15/14.
  */
 
-var MySQL = require('decaf-mysql').MySQL,
-Schema    = require('decaf-mysql').Schema;
+/*global require, global */
+var MySQL  = require('decaf-mysql').MySQL,
+    Schema = require('decaf-mysql').Schema;
 
 // sql singleton will be available to all the http child threads
 global.SQL = new MySQL({
@@ -18,7 +19,7 @@ Schema.add({
         {name : 'userId', type : 'int', autoIncrement : true},
         {name : 'firstName', type : 'varchar', size : 32},
         {name : 'lastName', type : 'varchar', size : 32},
-        {name : 'email', type : 'varchar', size : 64},
+        {name : 'email', type : 'varchar', size : 64}
     ],
     primaryKey : 'userId',
     indexes    : [
