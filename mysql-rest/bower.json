@@ -1,0 +1,30 @@
+{
+  "name": "mysql-rest-example",
+  "version": "0.0.1",
+  "authors": [
+    "Mike Schwartz <mike@moduscreate.com>"
+  ],
+  "description": "Tutorial: Example WWW App using DecafJS with REST API",
+  "main": "app.js",
+  "keywords": [
+    "tutorial",
+    "rhino",
+    "JavaScript",
+    "Sync",
+    "REST",
+    "MySQL"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/decafjs/decaf-tutorial",
+  "private": "false",
+  "dependencies": {
+    "decaf": "decafjs/decaf#master",
+    "decaf-jolt": "decafjs/decaf-jolt#master",
+    "decaf-jolt-static": "decafjs/decaf-jolt-static#master",
+    "decaf-jolt-sjs": "decafjs/decaf-jolt-sjs#master",
+    "decaf-jolt-rest": "decafjs/decaf-jolt-rest#master",
+    "decaf-mysql": "decafjs/decaf-mysql#master",
+    "jquery": "2.x",
+    "bootstrap": "3.x"
+  }
+}

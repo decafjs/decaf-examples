@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>REST Demo</title>
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap-theme.min.css">
+</head>
+<body>
+<div class="container">
+    <div class="page-header">
+        <h1>REST Demo</h1>
+    </div>
+    <div class="row">
+        <div class="col-sm-3">
+            <div class="panel panel-default">
+                <div class="panel-heading">User List</div>
+                <div id="user-list">
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-9">
+            <div class="panel panel-default">
+                <div class="panel-heading">User Record</div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label for="id">ID</label>
+                        <input type="number" class="form-control" id="id" value="0" readonly>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="firstName">First Name</label>
+                        <input type="text" class="form-control" id="firstName">
+                    </div>
+                    <div class="form-group">
+                        <label for="lastName">Last Name</label>
+                        <input type="text" class="form-control" id="lastName">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" class="form-control" id="email">
+                    </div>
+                    <div class="pull-right">
+                        <button id="delete-button" class="btn btn-danger">Delete</button>
+                        <button id="update-button" class="btn btn-warning">Update</button>
+                        <button id="create-button" class="btn btn-primary">Create</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
+<script>
+    var URL    = '/v1/user',
+        userId = 0,
+        user   = {
+            firstName : '',
+            lastName  : '',
+            email     : ''
+        };
+
+    function trim( s ) {
+        if ( s === undefined ) {
+            s = '';
+        }
+        return s.trim();
+    }
+    function serializeUserForm() {
+        userId = parseInt($('#id').val(), 10);
+        user = {
+            firstName : trim($('#firstName').val()),
+            lastName  : trim($('#lastName').val()),
+            email     : trim($('#email').val())
+        };
+        return user;
+    }
+    function deserializeUserForm() {
+        $('#id').val(userId || 0);
+        $('#firstName').val(user.firstName);
+        $('#lastName').val(user.lastName);
+        $('#email').val(user.email);
+    }
+
+    function list() {
+        $.ajax(URL, {
+            type : 'GET'
+        }).done(function ( data ) {
+            var $userList = $('#user-list');
+            console.dir(data);
+            if ( data.list.length === 0 ) {
+                $userList.html('<div class="panel-body">No users</div>');
+                return;
+            }
+            var html = '<div class="list-group">';
+            $.each(data.list, function ( key, user ) {
+                var active = '';
+                if ( user.userId === userId ) {
+                    active = ' active';
+                }
+                html += '<a href="#" class="user-list-item list-group-item' + active + '" data-userid="' + user.userId + '">' + user.firstName + ' ' + user.lastName + '<span class="badge">' + user.userId + '</span></a>';
+            });
+            html += '</div>';
+            $userList.html(html);
+            $('.user-list-item').on('click', function ( e ) {
+                $.ajax(URL + '/' + $(e.target).attr('data-userid'), {
+                    type : 'GET'
+                }).done(function ( response ) {
+                    console.dir(response);
+                    user.firstName = response.user.firstName;
+                    user.lastName = response.user.lastName;
+                    user.email = response.user.email;
+                    userId = response.user.userId;
+                    deserializeUserForm();
+                    list();
+                });
+            });
+        });
+    }
+
+    function validateForm() {
+        var errors = [];
+        serializeUserForm();
+        if ( !user.firstName.length ) {
+            errors.push('First Name is required');
+        }
+        if ( !user.lastName.length ) {
+            errors.push('Last Name is required');
+        }
+        if ( !user.email.length ) {
+            errors.push('Email is required');
+        }
+        if ( errors.length ) {
+            alert('Errors in form:\n' + errors.join('\n'));
+            return false;
+        }
+        return true;
+    }
+    $(document).ready(function () {
+        serializeUserForm();
+        list();
+        $('#create-button').on('click', function ( e ) {
+            if ( validateForm() ) {
+                $.ajax(URL, {
+                    type        : 'POST',
+                    processData : false,
+                    contentType : 'application/json',
+                    data        : JSON.stringify(user)
+                }).done(function ( response ) {
+                    userId = response.user.userId;
+                    deserializeUserForm();
+                    list();
+                    alert(response.message);
+                });
+            }
+        });
+        $('#update-button').on('click', function ( e ) {
+            if (validateForm()) {
+                $.ajax(URL + '/' + userId, {
+                    type: 'PUT',
+                    processData: false,
+                    contentType : 'application/json',
+                    data: JSON.stringify(user)
+                }).done(function(response) {
+                    list();
+                    alert(response.message);
+                });
+            }
+        });
+        $('#delete-button').on('click', function(e) {
+            serializeUserForm();
+            if (!userId) {
+                alert('Select a user from the list first.');
+                return;
+            }
+            $.ajax(URL + '/' + userId, {
+                type: 'DELETE'
+            }).done(function(response) {
+                userId = 0;
+                user = {
+                    firstName: '',
+                    lastName: '',
+                    email: ''
+                };
+                deserializeUserForm();
+                list();
+                alert(response.message);
+            });
+        });
+    });
+</script>
+</body>
+</html>
