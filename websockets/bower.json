@@ -1,0 +1,22 @@
+{
+  "name": "websockets-example",
+  "version": "0.0.1",
+  "authors": [
+    "Mike Schwartz <mike@moduscreate.com>"
+  ],
+  "description": "Tutorial: Example WWW App using DecafJS with WebSockets API",
+  "main": "app.js",
+  "keywords": [
+    "tutorial",
+    "rhino",
+    "JavaScript",
+    "Sync",
+    "WebSockets"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/decafjs/decaf-examples",
+  "private": "false",
+  "dependencies": {
+    "decaf": "decafjs/decaf#master"
+  }
+}
