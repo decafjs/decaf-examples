@@ -1,26 +1,28 @@
 {
-  "name": "riot-example",
-  "version": "0.0.1",
-  "authors": [
+  "name"        : "riot-example",
+  "version"     : "0.0.1",
+  "authors"     : [
     "Mike Schwartz <mike@moduscreate.com>"
   ],
-  "description": "Tutorial: Example using riotjs",
-  "main": "app.js",
-  "keywords": [
+  "description" : "Tutorial: Example using riotjs",
+  "main"        : "app.js",
+  "keywords"    : [
     "tutorial",
     "rhino",
     "JavaScript",
     "Sync",
     "riotjs"
   ],
-  "license": "MIT",
-  "homepage": "https://github.com/decafjs/decaf-examples",
-  "private": "false",
+  "license"     : "MIT",
+  "homepage"    : "https://github.com/decafjs/decaf-examples",
+  "private"     : "false",
   "dependencies": {
-    "decaf": "decafjs/decaf#master",
-    "decaf-jolt": "decafjs/decaf-jolt#master",
+    "decaf"            : "decafjs/decaf#master",
+    "decaf-jolt"       : "decafjs/decaf-jolt#master",
     "decaf-jolt-static": "decafjs/decaf-jolt-static#master",
-    "decaf-jolt-riot": "decafjs/decaf-jolt-riot#master",
-    "bootstrap": "3.x"
+    "decaf-jolt-sjs"   : "decafjs/decaf-jolt-sjs#master",
+    "decaf-jolt-riot"  : "decafjs/decaf-jolt-riot#master",
+    "decaf-hoganjs"    : "decafjs/decaf-hoganjs",
+    "bootstrap"        : "3.x"
   }
 }

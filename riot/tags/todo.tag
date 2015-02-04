@@ -1,6 +1,4 @@
 <todo>
-    <h3>TODO</h3>
-
     <ul>
         <li each={ item, i in items }>{ item }</li>
     </ul>
@@ -10,9 +8,9 @@
         <button>Add #{ items.length + 1 }</button>
     </form>
     <script>
-        this.items = []
+        this.items = [];
 
-        handleSubmit( e ) {
+        this.handleSubmit = function( e ) {
             var input = e.target[ 0 ]
             this.items.push(input.value)
             input.value = ''

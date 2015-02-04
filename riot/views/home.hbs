@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <title>{{title}}</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {{> partials/css }}
+</head>
+<body>
+
+<navbar brand="{{title}}" active="link3"></navbar>
+
+<div class="container">
+    <h3>{{title}}</h3>
+    <todo></todo>
+</div>
+
+{{> partials/scripts }}
+</body>
+</html>
