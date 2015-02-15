@@ -1,0 +1,26 @@
+{
+  "name": "sockjs-example",
+  "version": "0.0.1",
+  "authors": [
+    "Mike Schwartz <mike@moduscreate.com>"
+  ],
+  "description": "Tutorial: Example WWW App using DecafJS with SockJS API",
+  "main": "app.js",
+  "keywords": [
+    "tutorial",
+    "rhino",
+    "JavaScript",
+    "Sync",
+    "SockJS"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/decafjs/decaf-examples",
+  "private": "false",
+  "dependencies": {
+    "decaf": "decafjs/decaf#master",
+    "decaf-jolt": "decafjs/decaf-jolt#master",
+    "decaf-jolt-static": "decafjs/decaf-jolt-static#master",
+    "sockjs" : "*",
+    "jquery": "2.x"
+  }
+}

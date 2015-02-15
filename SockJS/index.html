@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Test SockJS</title>
+</head>
+<body>
+<h1>Test SockJS</h1>
+
+<button id="open">Open</button>
+<button id="close">Close</button>
+<button id="start">Start</button>
+<button id="stop">Stop</button>
+<button id="clear">Clear</button>
+
+<div id="results"></div>
+<script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
+<script type="text/javascript" src="bower_components/sockjs/sockjs.js"></script>
+<script>
+    function clear() {
+        var $results = $('#results');
+        $results.html('');
+    }
+    function print(s) {
+        var $results = $('#results');
+        $results.html($results.html() + '<br/>' + s);
+    }
+    $(document).ready(function () {
+        var sock = null,
+            timerId = null;
+        $('#clear').on('click', function(e) {
+            e.preventDefault();
+            clear();
+        });
+        $('#open').on('click', function (e) {
+            e.preventDefault();
+            if (!sock) {
+                clear();
+                sock = new SockJS('http://localhost:8081/echo', null, {debug : true});
+                sock.onopen = function () {
+                    print('==== OPEN ====');
+                    console.log('open');
+                };
+                sock.onmessage = function (e) {
+                    print('MESSAGE: ' + e.data);
+                    console.log('message', e.data);
+                };
+                sock.onclose = function () {
+                    print('==== CLOSE ====');
+                    console.log('close');
+                    if (timerId) {
+                        clearInterval(timerId);
+                        timerId = null;
+                    }
+                    sock = null;
+                };
+            }
+        });
+        $('#start').on('click', function (e) {
+            e.preventDefault();
+            if (sock && !timerId) {
+                var i = 0;
+                timerId = setInterval(function() {
+                    console.log('sending');
+                    i++;
+                    sock.send('test ' + i);
+                }, 2500);
+            }
+        });
+        $('#stop').on('click', function(e) {
+            e.preventDefault();
+            print("==== STOP ====");
+            if (timerId) {
+                clearInterval(timerId);
+                timerId = null;
+            }
+        });
+        $('#close').on('click', function(e) {
+            e.preventDefault();
+            if (sock) {
+                sock.close();
+                sock = null;
+            }
+        })
+
+    })
+
+</script>
+</body>
+</html>
