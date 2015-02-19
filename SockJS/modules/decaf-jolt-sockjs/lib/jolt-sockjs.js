@@ -3,7 +3,8 @@
  */
 
 /*global require, exports */
-var {Session, SessionEventSource, SessionXhr, SessionXhrStreaming} = require('Sessions');
+var {Session, SessionWebSocket, SessionEventSource, SessionXhr, SessionXhrStreaming} = require('Sessions');
+var uuid = require('support').uuid;
 
 function random32() {
     var v = [Math.random() % 256, Math.random() % 256, Math.random() % 256, Math.random() % 256];
@@ -11,8 +12,10 @@ function random32() {
 }
 
 
-function SockJS(app, endpoint) {
+function SockJS(app, endpoint, options) {
     var me = this;
+
+    options = options || {};
     app.verb(endpoint, function (req, res) {
         var uuid,
             session;
@@ -29,14 +32,13 @@ function SockJS(app, endpoint) {
             res.end('Welcome to SockJS!\n');
         }
         else if (req.args[0] === 'info') {
-            console.log('INFO');
             res.writeHead(200, {'Content-type' : 'application/json; charset=UTF-8'});
-            res.end(JSON.stringify({
-                websocket     : false,
+            res.end(JSON.stringify(decaf.extend(options, {
+                websocket     : true,
                 origins       : ['*:*'],
                 cookie_needed : false,
                 entropy       : random32()
-            }));
+            })));
         }
         else if (req.args[0].match(/\d\d\d/)) {
             uuid = req.args[1];
@@ -114,13 +116,16 @@ function SockJS(app, endpoint) {
         }
     });
     app.webSocket(endpoint, function (ws) {
-        console.log('WebSocket');
-        ws.on('message', function (message) {
-            console.log('WebSocket message:');
-            console.dir(message);
-            me.fire('message', message);
-        });
-        ws.sendMessage('o');
+        var session = new SessionWebSocket(ws);
+        Session.add(uuid(), session);
+        me.fire('open', session);
+
+        //ws.on('message', function (message) {
+        //    console.log('WebSocket message:');
+        //    console.dir(message);
+        //    me.fire('message', message);
+        //});
+        //ws.sendMessage('o');
     });
 }
 decaf.extend(SockJS.prototype, decaf.observable);

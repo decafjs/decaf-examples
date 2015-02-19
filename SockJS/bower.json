@@ -20,6 +20,7 @@
     "decaf": "decafjs/decaf#master",
     "decaf-jolt": "decafjs/decaf-jolt#master",
     "decaf-jolt-static": "decafjs/decaf-jolt-static#master",
+    "decaf-jolt-sockjs": "decafjs/decaf-jolt-sockjs#master",
     "sockjs" : "*",
     "jquery": "2.x"
   }

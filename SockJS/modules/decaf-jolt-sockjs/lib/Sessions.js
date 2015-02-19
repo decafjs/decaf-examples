@@ -16,7 +16,7 @@
 
 var Thread = require('Threads').Thread;
 
-const DEBUGME = true;
+const DEBUGME = false;
 const BYTES_PER_STREAM = 4096;
 
 
@@ -173,9 +173,11 @@ decaf.extend(SessionXhr.prototype, {
                 if (DEBUGME) console.log('xhr tick pending, timeout');
                 me.flush();
                 me.timer = Session.DISCONNECT_TIME;
+                if (DEBUGME) console.log('xhr tick pending: ' + me.pending);
             }
             else {
                 // closed (client no longer sending /xhr request
+                me.session_status = Session.CLOSED;
                 me.fire('close');
                 if (DEBUGME) console.log('XHR closed');
                 return false;       // remove Session
@@ -201,7 +203,16 @@ decaf.extend(SessionXhr.prototype, {
                 if (messages.length) {
                     if (DEBUGME) console.log('dequeue ' + response);
                 }
-                res.write(response);
+                try {
+                    res.write(response);
+                }
+                catch (e) {
+                    // EOF
+                    if (DEBUGME) console.dir(e);
+                    me.pending = false;
+                    me.session_status = Session.CLOSED;
+                    me.fire('close');
+                }
             }, me);
         if (me.pending) {
             dequeue();
@@ -303,7 +314,6 @@ decaf.extend(SessionXhrStreaming.prototype, {
     heartbeat : function () {
         if (DEBUGME) console.log('streaming heartbeat');
         var me = this;
-        debugger
         if (me.pending) {
             try {
                 me.res.write('h\n');
@@ -324,6 +334,52 @@ decaf.extend(SessionXhrStreaming.prototype, {
     }
 });
 decaf.extend(SessionXhrStreaming.prototype, decaf.observable);
+
+//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
+//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
+//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
+
+function SessionWebSocket(ws) {
+    var me = this;
+
+    me.ws = ws;
+    ws.on('close', function () {
+        me.session_status = Session.CLOSED;
+        me.fire('close');
+    });
+    ws.on('message', function (messages) {
+        try {
+            messages = JSON.parse(messages);
+            decaf.each(messages, function(message) {
+                me.fire('message', message);
+            });
+        }
+        catch (e) {
+
+        }
+    });
+}
+decaf.extend(SessionWebSocket.prototype, {
+    write     : function (s) {
+        try {
+            this.ws.sendMessage('a' + '[' + quote(s) + ']\n');
+        }
+        catch (e) {
+            console.dir(e);
+        }
+    },
+    open      : function () {
+        this.ws.sendMessage('o');
+    },
+    tick      : function () {
+
+    },
+    heartbeat : function () {
+        if (DEBUGME) console.log('WebSocket heartbeat');
+        this.ws.sendMessage('h');
+    }
+});
+decaf.extend(SessionWebSocket.prototype, decaf.observable);
 
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
@@ -362,6 +418,7 @@ new Thread(function () {
 
 decaf.extend(exports, {
     Session             : Session,
+    SessionWebSocket    : SessionWebSocket,
     SessionEventSource  : SessionEventSource,
     SessionXhr          : SessionXhr,
     SessionXhrStreaming : SessionXhrStreaming
