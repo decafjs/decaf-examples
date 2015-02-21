@@ -23,7 +23,7 @@ sockjs.on('open', function (sock) {
     var id = setInterval(function () {
         var s = 'ping ' + i++;
         console.log(s);
-        sock.write(s);
+        sock.send(s);
     }, 1000);
     sock.on('close', function () {
         console.log('==== close ====');
@@ -34,9 +34,8 @@ sockjs.on('open', function (sock) {
         console.dir({
             message : message
         });
-        sock.write(message);
+        sock.send(message);
     });
-    debugger;
 });
 
 app.listen(8081, '0.0.0.0');

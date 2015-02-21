@@ -59,13 +59,13 @@ http.createServer(function(req, res) {
     ws.broadcast('/test', 'Another joined');
     var handle = setInterval(function() {
         logfile.println('ping ' + ws.uuid);
-        ws.sendMessage('ping');
+        ws.send('ping');
         ws.ping();
     }, 1000);
     ws.on('message', function(message) {
         console.log(message);
         logfile.println(message);
-        ws.sendMessage('goodbye ' + message);
+        ws.send('goodbye ' + message);
     });
     ws.on('close', function() {
         clearInterval(handle);
