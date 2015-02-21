@@ -27,7 +27,10 @@ sockjs.on('open', function (sock) {
     }, 1000);
     sock.on('close', function () {
         console.log('==== close ====');
-        clearInterval(id);
+        if (id !== false) {
+            clearInterval(id);
+        }
+        id = false;
     });
     sock.on('message', function (message) {
         console.log('==== message ====');
