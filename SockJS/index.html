@@ -12,6 +12,7 @@
 <button id="start">Start</button>
 <button id="stop">Stop</button>
 <button id="clear">Clear</button>
+<button id="remote-close">Remote Close</button>
 
 <div id="results"></div>
 <script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
@@ -78,10 +79,17 @@
         $('#close').on('click', function(e) {
             e.preventDefault();
             if (sock) {
+                print("CLOSING");
                 sock.close();
                 sock = null;
             }
-        })
+        });
+        $('#remote-close').on('click', function(e) {
+            e.preventDefault();
+            if (sock) {
+                sock.send('closeme');
+            }
+        });
 
     })
 

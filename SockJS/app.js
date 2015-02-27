@@ -11,7 +11,7 @@ var SockJS       = require('decaf-jolt-sockjs').SockJS,
     //SjsFile      = require('decaf-jolt-sjs').SjsFile,
     //RestServer   = require('decaf-jolt-rest').RestServer,
     app          = new Application(),
-    sockjs       = new SockJS(app, 'echo'),
+    sockjs       = new SockJS(app, 'echo', { websocket: true }),
     {setInterval, clearInterval}  = require('Timers');
 
 app.verb('/', new StaticFile('index.html'));
@@ -37,7 +37,14 @@ sockjs.on('open', function (sock) {
         console.dir({
             message : message
         });
-        sock.send(message);
+        if (message === 'closeme') {
+            debugger;
+            console.log('CLOSE ME');
+            sock.close();
+        }
+        else {
+            sock.send(message);
+        }
     });
 });
 

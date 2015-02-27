@@ -21,7 +21,10 @@
     "decaf-jolt": "decafjs/decaf-jolt#master",
     "decaf-jolt-static": "decafjs/decaf-jolt-static#master",
     "decaf-jolt-sockjs": "decafjs/decaf-jolt-sockjs#master",
-    "sockjs" : "*",
+    "sockjs": "*",
     "jquery": "2.x"
+  },
+  "unused": {
+    "xxx" : "END OF UNUSED"
   }
 }
